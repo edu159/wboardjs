@@ -11,8 +11,7 @@ Snapshots
 
 Handwriting emulation     |  Text selection and movement             |
 ------------------------- |------------------------------------------|
-<img src="extra/movetext.gif" alt="Drawing" style="width: 1500px;"/>|
-<img src="extra/handwritten.png" alt="Drawing" style="width: 200px;"/>|
+<img src="extra/movetext.gif" alt="Drawing" style="width: 1500px;"/>|<img src="extra/handwritten.png" alt="Drawing" style="width: 200px;"/>|
 
 Set up
 ------------------
