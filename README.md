@@ -8,9 +8,10 @@ A JavaScript whiteboard webapp embeeded into a Django app to do handwritting in 
 
 Snapshots
 ---------------
-Handwriting emulation     |  Text selection and movement       |
-------------------------- |-------------------------|
-![alt text](extra/handwritten.png) | ![alt text](extra/movetext.gif)|
+
+Handwriting emulation     |  Text selection and movement             |
+------------------------- |------------------------------------------|
+![alt text](extra/movetext.gif)| ![alt text](extra/handwritten.png) |
 
 Set up
 ------------------
