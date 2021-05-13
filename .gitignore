@@ -1,2 +1,7 @@
 *.sqlite3
 *.pyc
+
+# Mac and VCode settings to be ignored
+.DS_Store
+.devcontainer/
+.vscode/
