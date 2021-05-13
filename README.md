@@ -31,7 +31,7 @@ Assuming *virtualenv* is installed, the list of commands to run the app are:
 
 #### Dependencies
 
-- python-django == 1.10
+- python-django == 3+
 
 > **Note**: It has only been tested with version 1.10 so there is no guarantee it is forward/backward compatible.
 
