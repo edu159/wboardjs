@@ -3,5 +3,5 @@ from __future__ import unicode_literals
 from django.apps import AppConfig
 
 
-class WboardjsConfig(AppConfig):
-    name = 'WBoardJS'
+class wboardjsConfig(AppConfig):
+    name = "wboardjs"
