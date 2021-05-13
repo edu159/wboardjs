@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from snoopy.snoopy.settings import INSTALLED_APPS
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -39,7 +38,7 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-OWN_APPS = ["wboardjs"]
+OWN_APPS = ["wboardjs",]
 
 INSTALLED_APPS = DJANGO_APPS + OWN_APPS
 
