@@ -38,7 +38,9 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
-OWN_APPS = ["wboardjs",]
+OWN_APPS = [
+    "wboardjs",
+]
 
 INSTALLED_APPS = DJANGO_APPS + OWN_APPS
 
