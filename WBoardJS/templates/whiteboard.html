@@ -1,5 +1,5 @@
 <!doctype html>
-{% load staticfiles %}
+{% load static i18n %}
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -8,8 +8,6 @@
   <meta name="author" content="SitePoint">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="apple-mobile-web-app-status-bar-style" content="red">
-    <!-- To include JQuery
-        <script data-main="scripts/main" src="{% static "WBoardJS/js/lib/require.js" %}"></script> -->
 	<script type="text/JavaScript" data-main="WBoard/js/main.js" src="{% static "WBoardJS/js/lib/paper.js/paper-core.min.js" %}"></script>
 	<style>
 			canvas {
@@ -52,614 +50,629 @@
 	<p id="#text" ></p>
 	<script type="text/javascript">
 
-		//<canvas id="myCanvas" width="900" height = "650" style="border-style: solid;border-width:2px;border-color:blue"></canvas>
-		//<canvas id="lines-layer" width=980" height = "600" style="border-style: solid;border-width:0px;border-color:blue"></canvas>
-	// Only executed our code once the DOM is ready.
-		var _MODE = "PEN";
-		var _selection = false;
-		var style = "thin";
-		fullscreenMode = function() {
-			var el =document.documentElement
-				, rfs = el.requestFullScreen
-						|| el.webkitRequestFullScreen
-						|| el.mozRequestFullScreen;
-			rfs.call(el);
-		}
-		setStyle = function() {
-			if (style == "thin")
-				style = "gross";
-			else
-				style = "thin";
-		}
-		selectMode = function() {
-			_selection = _selection ? false : true;
-		}
-		eraseMode = function() {
-			_MODE = "ERASE";
-			/**
-			var p1 = doc3.activeLayer.children[0];
-			var pr2 = doc3.activeLayer.children[1];
-			pr2.strokeWidth = 0;
-			//var pr2 = p1.clone();//doc3.activeLayer.children[1];
-			pr2.fillColor ="white";
-			//pr2.strokeWidth =0;
-			var p3 = p1.intersect(pr2);
-			//console.log("name: " + p3.className);
-			p3.closed = true;
-			p3.strokeColor = "black";
-			p3.strokeWidth = 1;
-			p3.fillColor = "green";
-			//p3.selected = false;
-			doc3.view.update();
-			**/
-//			doc3.view.viewSize = new paper.Size(450, 325);
-//			doc.view.viewSize = new paper.Size(450, 325);
-//			doc2.view.viewSize = new paper.Size(450,325);
-//			doc3.view.update();
-		}
-		penMode = function() {
-			_MODE = "PEN";
-			c=0;
-		}
-		eraserRadius = function() {
-			if (eraser_radius == 15)
-				eraser_radius = 50;
-			else
-				eraser_radius = 15;
-		}
-		clearAll = function() {
-			doc.activeLayer.removeChildren();
-			doc.view.update();
-			doc2.activeLayer.removeChildren();
-			doc2.view.update();
-			doc3.activeLayer.removeChildren();
-			doc3.view.update();
+//<canvas id="myCanvas" width="900" height = "650" style="border-style: solid;border-width:2px;border-color:blue"></canvas>
+//<canvas id="lines-layer" width=980" height = "600" style="border-style: solid;border-width:0px;border-color:blue"></canvas>
+// Only executed our code once the DOM is ready.
+var _MODE = "PEN";
+var _selection = false;
+var style = "thin";
+fullscreenMode = function() {
+    var el = document.documentElement,
+        rfs = el.requestFullScreen ||
+        el.webkitRequestFullScreen ||
+        el.mozRequestFullScreen;
+    rfs.call(el);
+}
+setStyle = function() {
+    if (style == "thin")
+        style = "gross";
+    else
+        style = "thin";
+}
+selectMode = function() {
+    _selection = _selection ? false : true;
+}
+eraseMode = function() {
+    _MODE = "ERASE";
+    /**
+    var p1 = doc3.activeLayer.children[0];
+    var pr2 = doc3.activeLayer.children[1];
+    pr2.strokeWidth = 0;
+    //var pr2 = p1.clone();//doc3.activeLayer.children[1];
+    pr2.fillColor ="white";
+    //pr2.strokeWidth =0;
+    var p3 = p1.intersect(pr2);
+    //console.log("name: " + p3.className);
+    p3.closed = true;
+    p3.strokeColor = "black";
+    p3.strokeWidth = 1;
+    p3.fillColor = "green";
+    //p3.selected = false;
+    doc3.view.update();
+    **/
+    //			doc3.view.viewSize = new paper.Size(450, 325);
+    //			doc.view.viewSize = new paper.Size(450, 325);
+    //			doc2.view.viewSize = new paper.Size(450,325);
+    //			doc3.view.update();
+}
+penMode = function() {
+    _MODE = "PEN";
+    c = 0;
+}
+eraserRadius = function() {
+    if (eraser_radius == 15)
+        eraser_radius = 50;
+    else
+        eraser_radius = 15;
+}
+clearAll = function() {
+    doc.activeLayer.removeChildren();
+    doc.view.update();
+    doc2.activeLayer.removeChildren();
+    doc2.view.update();
+    doc3.activeLayer.removeChildren();
+    doc3.view.update();
 
-		}
-		var scope = new paper.PaperScope();
-		var canvas = document.getElementById('writting-layer');
-		var doc = new paper.Project(canvas);
-		var canvas2 = document.getElementById('buffer-layer');
-		var doc2 = new paper.Project(canvas2);
-		var canvas3 = document.getElementById('background-layer');
-		var doc3 = new paper.Project(canvas3);
-		console.log("projects; " + scope.projects.length);
-		// Get a reference to the canvas object
-		// Create an empty project and a view for the canvas:
-		doc.activate();
-		//path3.transformContent = false;
-		var path;
-		var path2;
-		var backbone_path;
-		var temp_backbone_path;
-		var tool = new paper.Tool();
-		var min_distance = 2;
-		paper.tool.minDistance =min_distance;
-		paper.tool.maxDistance = 250;
+}
+var scope = new paper.PaperScope();
+var canvas = document.getElementById('writting-layer');
+var doc = new paper.Project(canvas);
+var canvas2 = document.getElementById('buffer-layer');
+var doc2 = new paper.Project(canvas2);
+var canvas3 = document.getElementById('background-layer');
+var doc3 = new paper.Project(canvas3);
+console.log("projects; " + scope.projects.length);
+// Get a reference to the canvas object
+// Create an empty project and a view for the canvas:
+doc.activate();
+//path3.transformContent = false;
+var path;
+var path2;
+var backbone_path;
+var temp_backbone_path;
+var tool = new paper.Tool();
+var min_distance = 2;
+paper.tool.minDistance = min_distance;
+paper.tool.maxDistance = 250;
 
 
-	var temp_path = null;
-	var eraser = null;
-	var frame_updater = null;
-	var eraser_radius = 15;
-	var _tini = 0;
-	var _tfin = 0;
-	var _penvel_ini = null;
-	var _pen_vel = 0;
-	var _penvel_prev = 0;
-		onDown3 = function(ev) {
-			console.log("ANDEROLRLL");
-			if (_MODE == "DRAG") {
-				if (del_buttom.contains(ev.point)){
-					doc2.activeLayer.removeChildren();
-					doc2.view.update();
-					_MODE = "PEN";
-				}
-				else {
-					if (frame.contains(ev.point)){
-						console.log("ENTRO");
-						
-					}
-					else {
-						select_group.strokeWidth = 0;
-						select_group.fillColor = "black";
-						doc3.activeLayer.addChildren(select_group.children);
-						doc2.activeLayer.removeChildren();
-						doc2.view.update();
-						doc3.view.update();
-						_MODE = "PEN";
-					}
-				}
-			
-						}
-			else if (_MODE == "ERASE") {
-				paper.tool.minDistance = 0;
-				eraser = new paper.Path.Circle(ev.point, eraser_radius);
-				eraser.strokeColor = 'green'
-//				if (frame_updater != null)
-//					clearInterval(frame_updater);
-//				frame_updater = setInterval(draw, 1);
-				//console.log("no paths: " + doc.activeLayer.children.length)
-				//console.log("no paths: " + doc2.activeLayer.children.length)
-				//console.log("no paths: " + doc3.activeLayer.children.length)
-			}
-			//Necessary not else-if because DRAG can change mode to PEN!
-			if (_MODE == "PEN") {
-				// Backbone path
-				paper.tool.minDistance = min_distance;
-				_tini = new Date().getTime(),
-				_penvel_ini = null;
-				_pen_vel_prev = 0;
-				backbone_path = new paper.Path();
-				backbone_path.add(ev.point);
-				backbone_path.visible = false;
-				temp_backbone_path = backbone_path.copyTo(doc2.activeLayer);
-				temp_backbone_path.data.strokeScales = [];
-				backbone_path.data.strokeScales = [];
-//				temp_backbone_path.visible = true;
-//				temp_backbone_path.selected= true;
-				// Initialize the empty paths to avoid null checking.
-				path = new paper.Path();
-				temp_path = path.copyTo(doc2.activeLayer);
-			}
-			
-		}
+var temp_path = null;
+var eraser = null;
+var frame_updater = null;
+var eraser_radius = 15;
+var _tini = 0;
+var _tfin = 0;
+var _penvel_ini = null;
+var _pen_vel = 0;
+var _penvel_prev = 0;
+onDown3 = function(ev) {
+    console.log("ANDEROLRLL");
+    if (_MODE == "DRAG") {
+        if (del_buttom.contains(ev.point)) {
+            doc2.activeLayer.removeChildren();
+            doc2.view.update();
+            _MODE = "PEN";
+        } else {
+            if (frame.contains(ev.point)) {
+                console.log("ENTRO");
 
-				function draw() {
-					doc3.view.update();
-				}
+            } else {
+                select_group.strokeWidth = 0;
+                select_group.fillColor = "black";
+                doc3.activeLayer.addChildren(select_group.children);
+                doc2.activeLayer.removeChildren();
+                doc2.view.update();
+                doc3.view.update();
+                _MODE = "PEN";
+            }
+        }
 
-			var factor = 1;
-		function drawOuterPath(render_layer, bbone_path, stroke_width, stroke_color, last_segment){
-			render_layer.activate();
-			var stroke_path = new paper.Path();
-			doc.activate();
-			stroke_path.add(bbone_path.firstSegment);
-			for (var seg = 1; seg < bbone_path.segments.length-1; seg++) {
-				var middle_point = bbone_path.segments[seg].point;
-				var curve = bbone_path.curves[seg];
-				var step = curve.getNormalAt(0,true);
-				var scale_factor = bbone_path.data.strokeScales[seg];
-				if (style == "gross")
-					scale_factor = 1;
-				step.x *= stroke_width*scale_factor;
-				step.y *= stroke_width*scale_factor;
-				//console.log("scale: " + bbone_path.data.strokeScales[seg]);
-				var top = middle_point.add(step);
-				var bottom = middle_point.subtract(step);
-				stroke_path.add(top);
-				stroke_path.insert(0, bottom);
-			}
-			if (last_segment)
-				stroke_path.add(bbone_path.lastSegment);
-//			stroke_path.selected= true;
-			stroke_path.strokeCap = "round";
-			stroke_path.strokeWidth =0;
-			stroke_path.strokeColor = stroke_color;
-			stroke_path.fillColor = stroke_color;
-			stroke_path.closed = true;
-			return stroke_path;
-		}
+    } else if (_MODE == "ERASE") {
+        paper.tool.minDistance = 0;
+        eraser = new paper.Path.Circle(ev.point, eraser_radius);
+        eraser.strokeColor = 'green'
+        //				if (frame_updater != null)
+        //					clearInterval(frame_updater);
+        //				frame_updater = setInterval(draw, 1);
+        //console.log("no paths: " + doc.activeLayer.children.length)
+        //console.log("no paths: " + doc2.activeLayer.children.length)
+        //console.log("no paths: " + doc3.activeLayer.children.length)
+    }
+    //Necessary not else-if because DRAG can change mode to PEN!
+    if (_MODE == "PEN") {
+        // Backbone path
+        paper.tool.minDistance = min_distance;
+        _tini = new Date().getTime(),
+            _penvel_ini = null;
+        _pen_vel_prev = 0;
+        backbone_path = new paper.Path();
+        backbone_path.add(ev.point);
+        backbone_path.visible = false;
+        temp_backbone_path = backbone_path.copyTo(doc2.activeLayer);
+        temp_backbone_path.data.strokeScales = [];
+        backbone_path.data.strokeScales = [];
+        //				temp_backbone_path.visible = true;
+        //				temp_backbone_path.selected= true;
+        // Initialize the empty paths to avoid null checking.
+        path = new paper.Path();
+        temp_path = path.copyTo(doc2.activeLayer);
+    }
+
+}
+
+function draw() {
+    doc3.view.update();
+}
+
+var factor = 1;
+
+function drawOuterPath(render_layer, bbone_path, stroke_width, stroke_color, last_segment) {
+    render_layer.activate();
+    var stroke_path = new paper.Path();
+    doc.activate();
+    stroke_path.add(bbone_path.firstSegment);
+    for (var seg = 1; seg < bbone_path.segments.length - 1; seg++) {
+        var middle_point = bbone_path.segments[seg].point;
+        var curve = bbone_path.curves[seg];
+        var step = curve.getNormalAt(0, true);
+        var scale_factor = bbone_path.data.strokeScales[seg];
+        if (style == "gross")
+            scale_factor = 1;
+        step.x *= stroke_width * scale_factor;
+        step.y *= stroke_width * scale_factor;
+        //console.log("scale: " + bbone_path.data.strokeScales[seg]);
+        var top = middle_point.add(step);
+        var bottom = middle_point.subtract(step);
+        stroke_path.add(top);
+        stroke_path.insert(0, bottom);
+    }
+    if (last_segment)
+        stroke_path.add(bbone_path.lastSegment);
+    //			stroke_path.selected= true;
+    stroke_path.strokeCap = "round";
+    stroke_path.strokeWidth = 0;
+    stroke_path.strokeColor = stroke_color;
+    stroke_path.fillColor = stroke_color;
+    stroke_path.closed = true;
+    return stroke_path;
+}
 var smooth_type = "continuous";
 var smooth_factor = 1;
 var pen_width = 1.5;
 
-		adjustSampling = function (vmin, vmax, dmin, dmax, vel) {
-			var d;
-			if (vel < vmin)
-				d = dmin;
-			else if ((vel > vmin) && (vel < vmax))
-				d = dmin + vel / vmax * (dmax - dmin);
-			else 
-				d = dmax;
-			return d;
+adjustSampling = function(vmin, vmax, dmin, dmax, vel) {
+    var d;
+    if (vel < vmin)
+        d = dmin;
+    else if ((vel > vmin) && (vel < vmax))
+        d = dmin + vel / vmax * (dmax - dmin);
+    else
+        d = dmax;
+    return d;
 
-		}
+}
 
-		adjustScale = function (vmin, vmax, smin, smax, vel) {
-			var s;
-			if (vel < vmin)
-				s = smin;
-			else if ((vel > vmin) && (vel < vmax))
-				s = smin + vel / vmax * (smax - smin);
-			else 
-				s = smax;
-			return s/smin;
+adjustScale = function(vmin, vmax, smin, smax, vel) {
+    var s;
+    if (vel < vmin)
+        s = smin;
+    else if ((vel > vmin) && (vel < vmax))
+        s = smin + vel / vmax * (smax - smin);
+    else
+        s = smax;
+    return s / smin;
 
-		}
-
-
-		onDrag3 = function(ev){
-		if (_MODE == "PEN") {
-			var last_seg = temp_backbone_path.lastSegment;
-			var last_seg2 = temp_backbone_path.segments[temp_backbone_path.segments.length-2];
-			temp_backbone_path.add(ev.middlePoint);
-			temp_backbone_path.smooth({type:smooth_type, factor:smooth_factor});
-			_tfin = new Date().getTime();
-			_penvel = temp_backbone_path.lastCurve.length / (_tfin - _tini);
-			if (_penvel_ini == null)
-				_penvel_ini = _penvel; 
-			_tini = _tfin;
-			factor = adjustScale(0, 2, pen_width, 0.2*pen_width, _penvel);
-			temp_backbone_path.data.strokeScales.push(factor);
-			var info_str = " Pen velocity: " + _penvel + " | Sampling:  " + paper.tool.minDistance + " | Smoothness:" + factor;
-			document.getElementById("#text").innerHTML = info_str;
-			path.remove();
-			//doc.view.update();
-			if (path.length > 2000) {
-				temp_path.remove();
-				temp_path = drawOuterPath(doc2, temp_backbone_path, pen_width, "black", true);
-				temp_path.smooth({type:smooth_type});
-				doc2.view.update();
-				backbone_path.remove();
-				backbone_path = new paper.Path();
-				backbone_path.data.strokeScales = [];
-				backbone_path.add(last_seg2);
-				backbone_path.data.strokeScales.push(factor);
-				backbone_path.add(last_seg);
-			}
-			backbone_path.add(ev.middlePoint);
-			backbone_path.smooth({type:smooth_type, factor:smooth_factor});
-			backbone_path.data.strokeScales.push(factor);
-			path = drawOuterPath(doc, backbone_path, pen_width, "black", false);
-			path.smooth({type:smooth_type, factor:smooth_factor});
-			var d = adjustSampling(0.5, 2.5, 5, 20, _penvel);
-			//paper.tool.minDistance = d;
-			_penvel_prev = _penvel;
+}
 
 
-
-		}
-		// TODO:CHange name for the global variable path and path2 to _path, _path2 for example to 
-		// avoid name clashing.
-		else if (_MODE == "ERASE") {
-			var screen_dirty = false;
-			doc.activeLayer.removeChildren();
-			eraser = new paper.Path.Circle(ev.point, eraser_radius);
-			eraser.strokeColor = 'green'
-			var item_list = doc3.activeLayer.children;
-			var intersects = null;
-			var path_c = null;
-			var path_eval = [];
-			var item;
-			for (item = 0; item < item_list.length; item++) {
-				path_c = item_list[item];
-				if (path_c.className == "Path") {
-					intsecs = path_c.getIntersections(eraser);
-					var l;
-					var loc;
-					// Filter intersections to retain only one per path
-					for (l = 0; l < intsecs.length; l++) {
-						loc = intsecs[l];
-						if (path_eval.indexOf(loc.path.id) == -1) {
-							path_eval.push(loc.path.id);
-						}
-						else
-							intsecs.splice(l, 1);
-					}
-					// Now examine the intersections
-					for (l = 0; l < intsecs.length; l++) {
-						loc = intsecs[l];
-						screen_dirty = !(!screen_dirty && !splitPath(loc));
-					}
-				}
-			}
-		}
-		else if (_MODE == "DRAG") {
-			select_group.translate(ev.delta);
-			frame.translate(ev.delta);
-			del_buttom.translate(ev.delta);
-			doc2.view.update();
-
-		}
-		if (screen_dirty)
-			doc3.view.update();
-	}
-	var c = 0;
-	splitPath = function(loc) {
-		var dirty_screen = false;
-		var point1 = new paper.Path();
-		var point2 = new paper.Path();
-		var point3 = new paper.Path();
-		var point4 = new paper.Path();
-		var path_c = loc.path;
-		if (path_c.closed) {
-			c = 1;
-			var ind1 = loc.curve.index;
-			var no_of_curves = path_c.curves.length;
-			var ind2 = no_of_curves - ind1 - 3;
-			if (ind2 < 0)
-				ind2 += no_of_curves;
-			var p11 = path_c.curves[ind1].point1;
-			var p12 = path_c.curves[ind2].point1;
-			var p21 = path_c.curves[ind1].point2;
-			var p22 = path_c.curves[ind2].point2;
-			var s11 = path_c.curves[ind1].segment1.index;
-			var s12 = path_c.curves[ind1].segment2.index;
-			var s21 = path_c.curves[ind2].segment1.index;
-			var s22 = path_c.curves[ind2].segment2.index;
-			var sorted = [s11, s12, s21, s22].sort(function(a,b){return a-b});
-		//	if (!(p11.equals(p21) || p11.equals(p22) || p12.equals(p21) || p12.equals(p22))) {
-				console.log("---");
-				console.log(sorted[0] + " "+ sorted[1] + " " +sorted[2]+ " " +sorted[3]);
-				sorted = sorted.filter(function (e, i, arr) {
-				 return arr.lastIndexOf(e) === i;
-				});
-				console.log(sorted[0] + " "+ sorted[1] + " " +sorted[2]+ " " +sorted[3] + "len:" + sorted.length);
-				console.log("---");
-				var segments_p1;
-				if (sorted.length == 3) {
-					segments_p1 = path_c.segments.slice(sorted[2], path_c.segments.length);
-					segments_p1 = segments_p1.concat(path_c.segments.slice(0, sorted[0]+1));
-					console.log("seg1: " + segments_p1.length);
-				}
-				else {
-					segments_p1 = path_c.segments.slice(sorted[3], path_c.segments.length);
-					segments_p1 = segments_p1.concat(path_c.segments.slice(0, sorted[0]+1));
-				}
-				if (segments_p1.length > 3) {
-					doc3.activate();
-					var pp1 = new paper.Path(segments_p1);
-					doc.activate();
-					pp1.closePath();
-					var point_p1 = pp1.lastCurve.getPointAt(0.5, true);
-					pp1.add(point_p1);
-					pp1.fillColor = "black";
-					pp1.strokeCap = "round";
-					pp1.strokeWidth = 0;
-					pp1.selected= false;
-				if (pp1.length < 100)
-					pp1.remove();
-				}
-				
-				var segments_p2;
-				if (sorted.length == 3) 
-					segments_p2 = path_c.segments.slice(sorted[0], sorted[1]+1);
-				else {
-					segments_p2 = path_c.segments.slice(sorted[1], sorted[2]+1);
-				}
-				if (segments_p2.length > 3) {
-					console.log("seg2: " + segments_p2.length);
-					doc3.activate();
-					var pp2 = new paper.Path(segments_p2);
-					doc.activate();
-					pp2.closePath();
-					var point_p2 = pp2.lastCurve.getPointAt(0.5, true);
-					pp2.add(point_p2);
-					pp2.strokeColor = "black";
-					pp2.fillColor = "black";
-					pp2.strokeCap = "round";
-					pp2.selected = false;
-					if (pp2.length < 100)
-					pp2.remove();
-				}
-			//	console.log("no paths 3: " + doc3.activeLayer.children.length);
-			//	console.log("no paths 2: " + doc2.activeLayer.children.length);
-			//	console.log("no paths 1: " + doc.activeLayer.children.length);
-			//	console.log("-------------------------------------------------------")
-			path_c.remove();
-			dirty_screen = true;
-			point2.remove();
-			point3.remove();
-			point4.remove();
-			point1 = new paper.Path.Circle(p11, 2)
-			point1.strokeColor = "blue";
-			point1.fillColor = "blue";
-			point2 = new paper.Path.Circle(p12, 2)
-			point2.strokeColor = "red";
-			point2.fillColor = "red";
-			point3 = new paper.Path.Circle(p21, 2)
-			point3.strokeColor = "blue";
-			point3.fillColor = "blue";
-			point4 = new paper.Path.Circle(p22, 2)
-			point4.strokeColor = "red";
-			point4.fillColor = "red";
-			return dirty_screen;
-					}
-	}
-	var select_group;
-	var frame;
-	var del_buttom;
-
-	onUp3 = function(ev) {
-			if (_MODE == "PEN") {
-			// First layer
-			backbone_path.add(ev.point);
-			backbone_path.smooth({type:smooth_type, factor:smooth_factor});
-			factor = adjustScale(0.01, 2, pen_width, 0.2*pen_width, _penvel);
-			backbone_path.data.strokeScales.push(factor);
-			//temp_backbone_path.simplify(1.0);
-			path.remove();
-			path = drawOuterPath(doc, backbone_path, pen_width, "black", true);
-			//temp_backbone_path.selected = true;
-			path.smooth({type:smooth_type, factor:smooth_factor});
-			path.closePath();
-			//path.simplify(4.0);
-			//Waiting for Jurgen fix
-			doc.view.update();
-			// Second Layer
-			temp_backbone_path.add(ev.point);
-			temp_backbone_path.smooth({type:smooth_type, factor:smooth_factor});
-			factor = adjustScale(0, 2, pen_width, 0.2*pen_width, _penvel);
-			temp_backbone_path.data.strokeScales.push(factor);
-			//temp_backbone_path.simplify(1.0);
-			temp_path.remove();
-			temp_path = drawOuterPath(doc3, temp_backbone_path, pen_width, "black", true);
-			//temp_backbone_path.selected = true;
-			temp_path.smooth({type:smooth_type, factor:smooth_factor});
-			temp_path.closePath();
-			// Remove backbones paths for now (change later)
-			backbone_path.remove();
-		//	doc3.view.update();
-			//temp_path.fillColor="green";
-			//temp_path.strokeColor="green";
-//			temp_path.strokeWidth = 4;
-			var endpoint1 = temp_backbone_path.lastSegment.point;
-			var endpoint2 = temp_backbone_path.firstSegment.point;
-			doc2.activeLayer.removeChildren();
-
-			if (_selection && endpoint1.isClose(endpoint2, 200)) {
-				var select_path = temp_backbone_path.copyTo(doc.activeLayer);
-				temp_backbone_path.remove(); //Careful
-				select_path.visible = false;
-				select_path.closePath();
-				doc2.activate();
-				select_group = new paper.Group();
-				doc.activate();
-				var path_list = doc3.activeLayer.children;
-				var delete_paths = [];
-				console.log("no paths in 3: " + path_list.length);
-				for (var p = 0; p < path_list.length; p++) {
-					var pp = path_list[p];
-					console.log("clas:" + pp.className);
-					console.log(p);
-					if (pp.className == "Path" && pp.visible) {
-						console.log("idtemp: " + temp_path.id + " pp.id: "+ pp.id);
-							if (temp_path.id != pp.id) {
-							console.log("Entro");
-								console.log("(1) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
-								var intsec = select_path.intersect(pp);
-								console.log("intsec class name: " + intsec.className);
-								intsec.closePath();
-								console.log("(2) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
-								intsec.visible = false;
-								//intsec.selected = true;
-								//intsec.closed = true;
-								//console.log("Area insec:" + intsec.area);
-								//console.log("Area path:" + pp.area);
-								if (Math.abs(intsec.area) > Math.abs(pp.area) * 0.5){
-									console.log("Entro2");
-									pp.fillColor = "white";
-									pp.strokeWidth = 1;
-									pp.copyTo(select_group);
-									// Now make it invisible
-									pp.visible = false;
-									delete_paths.push(pp);
-									temp_path.opacity = 0.25;
-									//pp.selected=true;
-
-								}
-								intsec.remove();
-							}
-					}
-					console.log("(3) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
-					
-				}	
-
-				if (!select_group.isEmpty()){
-					for (var p = 0; p < delete_paths.length; p++)
-						delete_paths[p].remove();
-					console.log("(4) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
-					console.log("group size: " + select_group.children.length);
-					var rect =select_group.strokeBounds;
-					doc2.activate();
-					frame = new paper.Shape.Rectangle(rect.expand(20));
-					frame.strokeColor = "blue";
-					frame.dashArray = [15,8];
-					del_buttom = new paper.Shape.Circle(rect.topRight.add(new paper.Point(25,-25)), 15);
-					del_buttom.strokeColor = "black";
-					del_buttom.strokeWidth = 1;
-					del_buttom.fillColor = "red";
-					doc.activate();
-					_MODE = "DRAG";
-					//Maybe is not needed to remove but to make them non-visible and them transform
-					// if the paths in the group is moved.
-					temp_path.remove();
-				}
-				else 
-					select_group.remove();
-			select_path.remove();
-		}
-		//console.log("1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
-		doc3.view.update(); 
-		doc2.view.update();
-		//doc.activeLayer.removeChildren();
-		//doc.view.update();
-		setTimeout(update, 0);
-		}
-		else if (_MODE == "ERASE") {
-			paper.tool.minDistance = min_distance;
-			doc.activeLayer.removeChildren();
-		}
-			else if (_MODE == "DRAG") {
-
-			}
-	}
-		update = function() {
-		//doc2.view.update(); 
-		doc3.view.update(); 
-		doc2.view.update();
-		doc.activeLayer.removeChildren();
-		doc.view.update();
-		//doc.view.update();
-		}
-		onDown1 = function(ev) {
-			path = new paper.Path();
-			path.selected= false;
-			path.strokeCap = "round";
-			path.strokeWidth = 8;
-			path.strokeColor = "black";
-			path.add(ev.point);
-			path2 = new paper.Path();
-			path2.selected= false;
-			path2.strokeCap = "round";
-			path2.strokeWidth = 6;
-			path2.strokeColor = "white";
-			path2.add(ev.point);
-		}
-	
-	onDrag1 = function(ev){
-		var step = new paper.Point(5, 5);
-		var top = ev.middlePoint.add(step);
-		var bottom = ev.middlePoint.subtract(step);
-		path.add(ev.middlePoint);
-		path.smooth();
-	}
+onDrag3 = function(ev) {
+    if (_MODE == "PEN") {
+        var last_seg = temp_backbone_path.lastSegment;
+        var last_seg2 = temp_backbone_path.segments[temp_backbone_path.segments.length - 2];
+        temp_backbone_path.add(ev.middlePoint);
+        temp_backbone_path.smooth({
+            type: smooth_type,
+            factor: smooth_factor
+        });
+        _tfin = new Date().getTime();
+        _penvel = temp_backbone_path.lastCurve.length / (_tfin - _tini);
+        if (_penvel_ini == null)
+            _penvel_ini = _penvel;
+        _tini = _tfin;
+        factor = adjustScale(0, 2, pen_width, 0.2 * pen_width, _penvel);
+        temp_backbone_path.data.strokeScales.push(factor);
+        var info_str = " Pen velocity: " + _penvel + " | Sampling:  " + paper.tool.minDistance + " | Smoothness:" + factor;
+        document.getElementById("#text").innerHTML = info_str;
+        path.remove();
+        //doc.view.update();
+        if (path.length > 2000) {
+            temp_path.remove();
+            temp_path = drawOuterPath(doc2, temp_backbone_path, pen_width, "black", true);
+            temp_path.smooth({
+                type: smooth_type
+            });
+            doc2.view.update();
+            backbone_path.remove();
+            backbone_path = new paper.Path();
+            backbone_path.data.strokeScales = [];
+            backbone_path.add(last_seg2);
+            backbone_path.data.strokeScales.push(factor);
+            backbone_path.add(last_seg);
+        }
+        backbone_path.add(ev.middlePoint);
+        backbone_path.smooth({
+            type: smooth_type,
+            factor: smooth_factor
+        });
+        backbone_path.data.strokeScales.push(factor);
+        path = drawOuterPath(doc, backbone_path, pen_width, "black", false);
+        path.smooth({
+            type: smooth_type,
+            factor: smooth_factor
+        });
+        var d = adjustSampling(0.5, 2.5, 5, 20, _penvel);
+        //paper.tool.minDistance = d;
+        _penvel_prev = _penvel;
 
 
-	onUp1 = function(ev) {
-			path.add(ev.point);
-			path2.add(ev.point);
-			path.smooth();
-			path2.smooth();
-			//path.simplify();
-			//path2.simplify();
-	}
+
+    }
+    // TODO:CHange name for the global variable path and path2 to _path, _path2 for example to 
+    // avoid name clashing.
+    else if (_MODE == "ERASE") {
+        var screen_dirty = false;
+        doc.activeLayer.removeChildren();
+        eraser = new paper.Path.Circle(ev.point, eraser_radius);
+        eraser.strokeColor = 'green'
+        var item_list = doc3.activeLayer.children;
+        var intersects = null;
+        var path_c = null;
+        var path_eval = [];
+        var item;
+        for (item = 0; item < item_list.length; item++) {
+            path_c = item_list[item];
+            if (path_c.className == "Path") {
+                intsecs = path_c.getIntersections(eraser);
+                var l;
+                var loc;
+                // Filter intersections to retain only one per path
+                for (l = 0; l < intsecs.length; l++) {
+                    loc = intsecs[l];
+                    if (path_eval.indexOf(loc.path.id) == -1) {
+                        path_eval.push(loc.path.id);
+                    } else
+                        intsecs.splice(l, 1);
+                }
+                // Now examine the intersections
+                for (l = 0; l < intsecs.length; l++) {
+                    loc = intsecs[l];
+                    screen_dirty = !(!screen_dirty && !splitPath(loc));
+                }
+            }
+        }
+    } else if (_MODE == "DRAG") {
+        select_group.translate(ev.delta);
+        frame.translate(ev.delta);
+        del_buttom.translate(ev.delta);
+        doc2.view.update();
+
+    }
+    if (screen_dirty)
+        doc3.view.update();
+}
+var c = 0;
+splitPath = function(loc) {
+    var dirty_screen = false;
+    var point1 = new paper.Path();
+    var point2 = new paper.Path();
+    var point3 = new paper.Path();
+    var point4 = new paper.Path();
+    var path_c = loc.path;
+    if (path_c.closed) {
+        c = 1;
+        var ind1 = loc.curve.index;
+        var no_of_curves = path_c.curves.length;
+        var ind2 = no_of_curves - ind1 - 3;
+        if (ind2 < 0)
+            ind2 += no_of_curves;
+        var p11 = path_c.curves[ind1].point1;
+        var p12 = path_c.curves[ind2].point1;
+        var p21 = path_c.curves[ind1].point2;
+        var p22 = path_c.curves[ind2].point2;
+        var s11 = path_c.curves[ind1].segment1.index;
+        var s12 = path_c.curves[ind1].segment2.index;
+        var s21 = path_c.curves[ind2].segment1.index;
+        var s22 = path_c.curves[ind2].segment2.index;
+        var sorted = [s11, s12, s21, s22].sort(function(a, b) {
+            return a - b
+        });
+        //	if (!(p11.equals(p21) || p11.equals(p22) || p12.equals(p21) || p12.equals(p22))) {
+        console.log("---");
+        console.log(sorted[0] + " " + sorted[1] + " " + sorted[2] + " " + sorted[3]);
+        sorted = sorted.filter(function(e, i, arr) {
+            return arr.lastIndexOf(e) === i;
+        });
+        console.log(sorted[0] + " " + sorted[1] + " " + sorted[2] + " " + sorted[3] + "len:" + sorted.length);
+        console.log("---");
+        var segments_p1;
+        if (sorted.length == 3) {
+            segments_p1 = path_c.segments.slice(sorted[2], path_c.segments.length);
+            segments_p1 = segments_p1.concat(path_c.segments.slice(0, sorted[0] + 1));
+            console.log("seg1: " + segments_p1.length);
+        } else {
+            segments_p1 = path_c.segments.slice(sorted[3], path_c.segments.length);
+            segments_p1 = segments_p1.concat(path_c.segments.slice(0, sorted[0] + 1));
+        }
+        if (segments_p1.length > 3) {
+            doc3.activate();
+            var pp1 = new paper.Path(segments_p1);
+            doc.activate();
+            pp1.closePath();
+            var point_p1 = pp1.lastCurve.getPointAt(0.5, true);
+            pp1.add(point_p1);
+            pp1.fillColor = "black";
+            pp1.strokeCap = "round";
+            pp1.strokeWidth = 0;
+            pp1.selected = false;
+            if (pp1.length < 100)
+                pp1.remove();
+        }
+
+        var segments_p2;
+        if (sorted.length == 3)
+            segments_p2 = path_c.segments.slice(sorted[0], sorted[1] + 1);
+        else {
+            segments_p2 = path_c.segments.slice(sorted[1], sorted[2] + 1);
+        }
+        if (segments_p2.length > 3) {
+            console.log("seg2: " + segments_p2.length);
+            doc3.activate();
+            var pp2 = new paper.Path(segments_p2);
+            doc.activate();
+            pp2.closePath();
+            var point_p2 = pp2.lastCurve.getPointAt(0.5, true);
+            pp2.add(point_p2);
+            pp2.strokeColor = "black";
+            pp2.fillColor = "black";
+            pp2.strokeCap = "round";
+            pp2.selected = false;
+            if (pp2.length < 100)
+                pp2.remove();
+        }
+        //	console.log("no paths 3: " + doc3.activeLayer.children.length);
+        //	console.log("no paths 2: " + doc2.activeLayer.children.length);
+        //	console.log("no paths 1: " + doc.activeLayer.children.length);
+        //	console.log("-------------------------------------------------------")
+        path_c.remove();
+        dirty_screen = true;
+        point2.remove();
+        point3.remove();
+        point4.remove();
+        point1 = new paper.Path.Circle(p11, 2)
+        point1.strokeColor = "blue";
+        point1.fillColor = "blue";
+        point2 = new paper.Path.Circle(p12, 2)
+        point2.strokeColor = "red";
+        point2.fillColor = "red";
+        point3 = new paper.Path.Circle(p21, 2)
+        point3.strokeColor = "blue";
+        point3.fillColor = "blue";
+        point4 = new paper.Path.Circle(p22, 2)
+        point4.strokeColor = "red";
+        point4.fillColor = "red";
+        return dirty_screen;
+    }
+}
+var select_group;
+var frame;
+var del_buttom;
+
+onUp3 = function(ev) {
+    if (_MODE == "PEN") {
+        // First layer
+        backbone_path.add(ev.point);
+        backbone_path.smooth({
+            type: smooth_type,
+            factor: smooth_factor
+        });
+        factor = adjustScale(0.01, 2, pen_width, 0.2 * pen_width, _penvel);
+        backbone_path.data.strokeScales.push(factor);
+        //temp_backbone_path.simplify(1.0);
+        path.remove();
+        path = drawOuterPath(doc, backbone_path, pen_width, "black", true);
+        //temp_backbone_path.selected = true;
+        path.smooth({
+            type: smooth_type,
+            factor: smooth_factor
+        });
+        path.closePath();
+        //path.simplify(4.0);
+        //Waiting for Jurgen fix
+        doc.view.update();
+        // Second Layer
+        temp_backbone_path.add(ev.point);
+        temp_backbone_path.smooth({
+            type: smooth_type,
+            factor: smooth_factor
+        });
+        factor = adjustScale(0, 2, pen_width, 0.2 * pen_width, _penvel);
+        temp_backbone_path.data.strokeScales.push(factor);
+        //temp_backbone_path.simplify(1.0);
+        temp_path.remove();
+        temp_path = drawOuterPath(doc3, temp_backbone_path, pen_width, "black", true);
+        //temp_backbone_path.selected = true;
+        temp_path.smooth({
+            type: smooth_type,
+            factor: smooth_factor
+        });
+        temp_path.closePath();
+        // Remove backbones paths for now (change later)
+        backbone_path.remove();
+        //	doc3.view.update();
+        //temp_path.fillColor="green";
+        //temp_path.strokeColor="green";
+        //			temp_path.strokeWidth = 4;
+        var endpoint1 = temp_backbone_path.lastSegment.point;
+        var endpoint2 = temp_backbone_path.firstSegment.point;
+        doc2.activeLayer.removeChildren();
+
+        if (_selection && endpoint1.isClose(endpoint2, 200)) {
+            var select_path = temp_backbone_path.copyTo(doc.activeLayer);
+            temp_backbone_path.remove(); //Careful
+            select_path.visible = false;
+            select_path.closePath();
+            doc2.activate();
+            select_group = new paper.Group();
+            doc.activate();
+            var path_list = doc3.activeLayer.children;
+            var delete_paths = [];
+            console.log("no paths in 3: " + path_list.length);
+            for (var p = 0; p < path_list.length; p++) {
+                var pp = path_list[p];
+                console.log("clas:" + pp.className);
+                console.log(p);
+                if (pp.className == "Path" && pp.visible) {
+                    console.log("idtemp: " + temp_path.id + " pp.id: " + pp.id);
+                    if (temp_path.id != pp.id) {
+                        console.log("Entro");
+                        console.log("(1) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
+                        var intsec = select_path.intersect(pp);
+                        console.log("intsec class name: " + intsec.className);
+                        intsec.closePath();
+                        console.log("(2) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
+                        intsec.visible = false;
+                        //intsec.selected = true;
+                        //intsec.closed = true;
+                        //console.log("Area insec:" + intsec.area);
+                        //console.log("Area path:" + pp.area);
+                        if (Math.abs(intsec.area) > Math.abs(pp.area) * 0.5) {
+                            console.log("Entro2");
+                            pp.fillColor = "white";
+                            pp.strokeWidth = 1;
+                            pp.copyTo(select_group);
+                            // Now make it invisible
+                            pp.visible = false;
+                            delete_paths.push(pp);
+                            temp_path.opacity = 0.25;
+                            //pp.selected=true;
+
+                        }
+                        intsec.remove();
+                    }
+                }
+                console.log("(3) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
+
+            }
+
+            if (!select_group.isEmpty()) {
+                for (var p = 0; p < delete_paths.length; p++)
+                    delete_paths[p].remove();
+                console.log("(4) 1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
+                console.log("group size: " + select_group.children.length);
+                var rect = select_group.strokeBounds;
+                doc2.activate();
+                frame = new paper.Shape.Rectangle(rect.expand(20));
+                frame.strokeColor = "blue";
+                frame.dashArray = [15, 8];
+                del_buttom = new paper.Shape.Circle(rect.topRight.add(new paper.Point(25, -25)), 15);
+                del_buttom.strokeColor = "black";
+                del_buttom.strokeWidth = 1;
+                del_buttom.fillColor = "red";
+                doc.activate();
+                _MODE = "DRAG";
+                //Maybe is not needed to remove but to make them non-visible and them transform
+                // if the paths in the group is moved.
+                temp_path.remove();
+            } else
+                select_group.remove();
+            select_path.remove();
+        }
+        //console.log("1: " + doc.activeLayer.children.length + " - 2: " + doc2.activeLayer.children.length + " - 3:" + doc3.activeLayer.children.length);
+        doc3.view.update();
+        doc2.view.update();
+        //doc.activeLayer.removeChildren();
+        //doc.view.update();
+        setTimeout(update, 0);
+    } else if (_MODE == "ERASE") {
+        paper.tool.minDistance = min_distance;
+        doc.activeLayer.removeChildren();
+    } else if (_MODE == "DRAG") {
+
+    }
+}
+update = function() {
+    //doc2.view.update(); 
+    doc3.view.update();
+    doc2.view.update();
+    doc.activeLayer.removeChildren();
+    doc.view.update();
+    //doc.view.update();
+}
+onDown1 = function(ev) {
+    path = new paper.Path();
+    path.selected = false;
+    path.strokeCap = "round";
+    path.strokeWidth = 8;
+    path.strokeColor = "black";
+    path.add(ev.point);
+    path2 = new paper.Path();
+    path2.selected = false;
+    path2.strokeCap = "round";
+    path2.strokeWidth = 6;
+    path2.strokeColor = "white";
+    path2.add(ev.point);
+}
+
+onDrag1 = function(ev) {
+    var step = new paper.Point(5, 5);
+    var top = ev.middlePoint.add(step);
+    var bottom = ev.middlePoint.subtract(step);
+    path.add(ev.middlePoint);
+    path.smooth();
+}
+
+
+onUp1 = function(ev) {
+    path.add(ev.point);
+    path2.add(ev.point);
+    path.smooth();
+    path2.smooth();
+    //path.simplify();
+    //path2.simplify();
+}
 
 
 var start_time = Date().getTime;
-var		mode = "closed-path"
-		tool.onMouseDown = function(event) {
-			if (mode == "simple")
-				onDown1(event);
-			//else if mode == "filled"
-			//	onDrag2();
-			else if (mode == "closed-path")
-				onDown3(event);
-		}
+var mode = "closed-path"
+tool.onMouseDown = function(event) {
+    if (mode == "simple")
+        onDown1(event);
+    //else if mode == "filled"
+    //	onDrag2();
+    else if (mode == "closed-path")
+        onDown3(event);
+}
 
-		tool.onMouseDrag = function(event) {
-			if (mode == "simple")
-				onDrag1(event);
-			//else if mode == "filled"
-			//	onDrag2();
-			else if (mode == "closed-path")
-				onDrag3(event);
-		}
+tool.onMouseDrag = function(event) {
+    if (mode == "simple")
+        onDrag1(event);
+    //else if mode == "filled"
+    //	onDrag2();
+    else if (mode == "closed-path")
+        onDrag3(event);
+}
 
-		tool.onMouseUp = function(event) {
-			if (mode == "simple")
-				onUp1(event);
-			//else if mode == "filled"
-			//	onDrag2();
-			else if (mode == "closed-path")
-				onUp3(event);
-		}
-
-
+tool.onMouseUp = function(event) {
+    if (mode == "simple")
+        onUp1(event);
+    //else if mode == "filled"
+    //	onDrag2();
+    else if (mode == "closed-path")
+        onUp3(event);
+}
 
 var fps = 4;
-var time =  0;
+var time = 0;
 //requestAnimationFrame(draw);
 /**
 function draw() {

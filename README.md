@@ -21,17 +21,14 @@ Set up
 #### Commands
 Assuming *virtualenv* is installed, the list of commands to run the app are:
 
-    virtualenv venv_wboardjs
-    cd venv_wboardjs
-    source bin/activate
-    pip install django==1.10
-    cd wboardjs
-    python manage.py runserver [ip]:[port]
-
+    $ python3 -m venv venv
+    $ source venv/bin/activate
+    $ pip install -r requirements.txt
+    $ python manage.py runserver [ip]:[port]
 
 #### Dependencies
 
-- python-django == 1.10
+- python-django == 3+
 
 > **Note**: It has only been tested with version 1.10 so there is no guarantee it is forward/backward compatible.
 
